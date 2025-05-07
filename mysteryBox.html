@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating 3D Hexagon Mystery Box</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap');
+        
+        :root {
+            --glow: rgb(230, 243, 250);
+        }
+        body {
+            background-color: rgb(240, 157, 185);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .hexagon {
+            z-index: -2;
+            position: relative;
+            width: 160px;
+            height: 92.38px;
+            background-color: var(--glow);
+            margin: 46.19px 0;
+            filter: blur(20px);
+        }
+        .hexagon:before,
+        .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+        }
+        .hexagon:before {
+            bottom: 100%;
+            border-bottom: 46.19px solid var(--glow);
+        }
+        .hexagon:after {
+            top: 100%;
+            border-top: 46.19px solid var(--glow);
+        }
+        .box {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            transition: all 750ms ease-in-out;
+        }
+        .back {
+            background-image: url("https://res.cloudinary.com/dbrwtwlwl/image/upload/v1580369339/cube/mysteryBoxBackground_2x_b2espr.png");
+        }
+        .top {
+            background-image: url("https://res.cloudinary.com/dbrwtwlwl/image/upload/v1580369339/cube/mysteryBoxTopFlap_2x_f9cb8g.png");
+        }
+        .left {
+            background-image: url("https://res.cloudinary.com/dbrwtwlwl/image/upload/v1580369339/cube/mysteryBoxLeftFlap_2x_y8u4gz.png");
+        }
+        .right {
+            background-image: url("https://res.cloudinary.com/dbrwtwlwl/image/upload/v1580369339/cube/mysteryBoxRightFlap_2x_abexhh.png");
+        }
+        #cube {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: hover 1.5s ease-in-out infinite alternate;
+            transition: transform 300ms ease-in-out;
+        }
+        @keyframes hover {
+            from {
+                transform: translateY(-0.5rem);
+            }
+            to {
+                transform: translateY(0.5rem);
+            }
+        }
+        .powerup {
+            background-size: cover;
+            border-radius: 50%;
+            height: 48px;
+            width: 48px;
+            opacity: 0;
+            transition: all 750ms ease-in-out;
+            position: absolute;
+            z-index: 0;
+        }
+        h1 {
+            position: absolute;
+            top: 10%;
+            text-align: center;
+            color: #ff4d6d;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: floatText 3s ease-in-out infinite alternate;
+            text-shadow: 3px 3px 10px rgba(255, 77, 109, 0.7);
+            font-family: 'Dancing Script', cursive;
+        }
+        .name-highlight {
+            font-family: 'Dancing Script', cursive;
+            color: #e91e63;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-danger fs-5 fs-md-4 animate__animated animate__bounceIn" id="h1text">💝✨ Click here to open the Mystery Box, My Love <span class="name-highlight">{{name}}</span>! ✨💝</h1>
+
+    <div id="cube">
+
+        <div class="hexagon"></div>
+        <div class="box back"></div>
+        <div class="box top"></div>
+        <div class="box left"></div>
+        <div class="box right"></div>
+        <div class="powerup"></div>
+    </div>
+
+    <script>
+        const name = "Janani";
+        document.body.innerHTML = document.body.innerHTML.replace(/{{name}}/g, name);
+        const cube = document.getElementById("cube");
+        const back = document.querySelector(".back");
+        const top1 = document.querySelector(".top");
+        const left1 = document.querySelector(".left");
+        const right1 = document.querySelector(".right");
+        const glow = document.querySelector(".hexagon");
+        const powerup = document.querySelector(".powerup");
+        const h1 = document.getElementById("h1text");
+        let isOpen = false;
+        let count = 0;
+
+        cube.addEventListener("click", () => {
+            if (!isOpen) {
+                // Open animation
+                top1.style.transform = "translateY(-3rem)";
+                left1.style.transform = "translateX(-3rem)";
+                right1.style.transform = "translateX(3rem)";
+                top1.style.opacity = 0.1;
+                left1.style.opacity = 0.1;
+                right1.style.opacity = 0.1;
+                back.style.opacity = 0.1;
+                glow.style.opacity = 0.5;
+                powerup.style.opacity = 1;
+                cube.style.animationPlayState = "paused";
+                powerup.style.zIndex = 10;
+                powerup.style.height = "80px";
+                powerup.style.width = "80px";
+                h1.innerHTML = `💖 Unlock a special surprise, my dearest <span class='name-highlight'>${name}</span>! Click the box to reveal my love! 💝✨`;
+                changePowerup();
+                isOpen = true;
+            } else {
+                // Close animation
+                top.style.transform = "translateY(0)";
+                left.style.transform = "translateX(0)";
+                right.style.transform = "translateX(0)";
+                top.style.opacity = 1;
+                left.style.opacity = 1;
+                right.style.opacity = 1;
+                back.style.opacity = 1;
+                glow.style.opacity = 1;
+                powerup.style.opacity = 0;
+                powerup.style.zIndex = 0;
+                cube.style.animationPlayState = "running";
+                powerup.style.height = "48px";
+                powerup.style.width = "48px";
+                changeGlow("rgba(255,195,26,0.4)");
+                isOpen = false;
+            }
+        });
+
+        function changeGlow(color) {
+            document.documentElement.style.setProperty("--glow", color);
+        }
+
+        function changePowerup() {
+            if (count % 2 === 0) {
+                powerup.style.backgroundImage = "url('https://media.giphy.com/media/tLcf4s4DK3tZmYUn6F/giphy.gif?cid=790b7611sc3gblaytv5aqmoz6hlv2klgobmklqqzlmzfbyg5&ep=v1_gifs_search&rid=giphy.gif&ct=g')"; // Heart GIF
+                changeGlow("rgba(69,185,251,0.33)");
+                 // Add a click event listener for redirection
+        powerup.onclick = () => {
+            window.location.href = "/indexPage.html"; // Change this to your desired page
+        }
+            } else {
+                powerup.style.backgroundImage = "url('https://cf.quizizz.com/game/img/powerups/lg/glitch.png')";
+                changeGlow("rgba(246,6,120,0.4)");
+            }
+            count++;
+        }
+       
+    </script>
+</body>
+</html>

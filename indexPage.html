@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Proposal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap');
+        
+        body {
+            text-align: center;
+            font-family: 'Courier New', sans-serif;
+            background-color: #FFC0CB;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Background with parallax effect */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ffcdd2, #f8bbd0, #e1bee7, #d1c4e9);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .name-highlight {
+            font-family: 'Dancing Script', cursive;
+            color: #e91e63;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #e91e63; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #e91e63; }
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 8px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .yes-btn {
+            background-color: #32CD32;
+            color: white;
+        }
+        
+        .no-btn {
+            background-color: #FF0000;
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Hearts container */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        .falling-heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+        
+        .falling-heart:hover {
+            transform: scale(1.5);
+        }
+        
+        .yes-btn:hover, .yes-btn:active {
+            box-shadow: 0px 0px 15px 5px yellow;
+        }
+        
+        .no-btn:hover, .no-btn:active {
+            background-color: red;
+            color: white;   
+        }
+        
+        /* Photo animation styles */
+        .photo-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .photo {
+            position: absolute;
+            width: 130px;
+            height: 100px;
+            background-color: #fff;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.8s, transform 0.8s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo:hover img {
+            transform: scale(1.1);
+        }
+        
+        .photo .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px;
+            font-size: 0.7rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo:hover .caption {
+            transform: translateY(0);
+        }
+        
+        .photo.left {
+            left: 2%;
+        }
+        
+        .photo.right {
+            right: 2%;
+        }
+        
+        .photo.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Modal styles for enlarged images */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            animation: zoom 0.6s;
+        }
+        
+        @keyframes zoom {
+            from {transform: scale(0.1)}
+            to {transform: scale(1)}
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        /* Timeline styles */
+        .timeline {
+            margin: 20px 0;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: #e91e63;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin: 15px 0;
+            position: relative;
+            padding: 10px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            max-width: 80%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item.left {
+            margin-right: auto;
+        }
+        
+        .timeline-item.right {
+            margin-left: auto;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #e91e63;
+        }
+        
+        /* Love reasons flip cards */
+        .reasons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .reason-card {
+            width: 120px;
+            height: 120px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .reason-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .reason-card.flipped .reason-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .reason-card-front, .reason-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .reason-card-front {
+            background-color: #e91e63;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .reason-card-back {
+            background-color: white;
+            color: #e91e63;
+            transform: rotateY(180deg);
+            font-size: 0.8rem;
+        }
+        
+        /* Gift box styles */
+        .gift-box {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+        
+        .gift-box-lid {
+            width: 100%;
+            height: 30px;
+            background: #e91e63;
+            border-radius: 5px 5px 0 0;
+            position: absolute;
+            top: -15px;
+            left: 0;
+            transition: transform 0.5s ease;
+            transform-origin: bottom;
+            z-index: 2;
+        }
+        
+        .gift-box-bottom {
+            width: 100%;
+            height: 100%;
+            background: #f48fb1;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gift-box-ribbon {
+            position: absolute;
+            width: 20px;
+            height: 120px;
+            background: #9c27b0;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        
+        .gift-box-ribbon::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 20px;
+            background: #9c27b0;
+            top: 50px;
+            left: -50px;
+        }
+        
+        .gift-opened .gift-box-lid {
+            transform: rotateX(-110deg);
+        }
+        
+        .gift-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            width: 80%;
+            text-align: center;
+        }
+        
+        .gift-opened .gift-message {
+            opacity: 1;
+        }
+        
+        /* Fireworks animation */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        
+        /* Quiz styles */
+        .quiz-container {
+            margin: 15px 0;
+        }
+        
+        .quiz-question {
+            margin-bottom: 15px;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .quiz-option {
+            padding: 8px;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background: #ffcdd2;
+        }
+        
+        .quiz-option.selected {
+            background: #e91e63;
+            color: white;
+        }
+        
+        /* Responsive design for different screen sizes */
+        @media (min-width: 576px) {
+            .container {
+                margin-top: 30px;
+                padding: 20px;
+                width: 90%;
+            }
+            
+            .photo {
+                width: 160px;
+                height: 120px;
+            }
+            
+            .photo.left {
+                left: 5%;
+            }
+            
+            .photo.right {
+                right: 5%;
+            }
+            
+            .reason-card {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                width: 70%;
+                max-width: 600px;
+                padding: 25px;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 25px;
+                font-size: 18px;
+            }
+            
+            .photo {
+                width: 200px;
+                height: 150px;
+            }
+            
+            .photo.left {
+                left: 10%;
+            }
+            
+            .photo.right {
+                right: 10%;
+            }
+            
+            .photo-container {
+                height: 400px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                width: 60%;
+            }
+            
+            .photo {
+                width: 220px;
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column justify-content-center align-items-center">
+    <!-- Container for falling hearts -->
+    <div id="heartsContainer" class="hearts-container"></div>
+
+    <!-- Modal for enlarged images -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="enlargedImage">
+    </div>
+
+    <script>
+        function createFallingHeart() {
+            const heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.classList.add("falling-heart");
+            
+            // Add hearts to the dedicated container instead of body
+            const heartsContainer = document.getElementById("heartsContainer");
+            heartsContainer.appendChild(heart);
+            
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        
+        // Reduce heart frequency for mobile devices
+        const heartInterval = window.innerWidth < 768 ? 500 : 300;
+        setInterval(createFallingHeart, heartInterval);
+    </script>
+    
+    <div id="proposal-container" class="container p-3 p-md-4 border rounded shadow">
+        <div id="intro-section">
+            <h1 class="text-danger fs-5 fs-md-4 animate__animated animate__bounceIn">💕 To the Most Beautiful <span class="name-highlight">{{name}}</span> 💕</h1>
+            
+            <div class="photo-container" id="photoContainer">
+                <!-- Photos will be added here by JavaScript -->
+            </div>
+            <p class="fs-6 fs-md-5 animate__animated animate__fadeIn">
+                I'm truly sorry for all the trouble I've caused, <span class="name-highlight">{{name}}</span>. 
+                I promise to fill our lives with love, understanding, and care moving forward.
+              </p>            <button class="btn btn-success animate__animated animate__pulse animate__infinite" onclick="startProposal()">Click Here for a Surprise! 🎁</button>
+        </div>
+        
+        <div id="proposal-section" class="hidden">
+            <h1 id="valentine-message" class="text-primary fs-5 fs-md-4"><span class="name-highlight">{{name}}</span>, Will you be my Valentine? ❤️</h1>
+            <button class="btn yes-btn" onclick="showLove()">Yes</button>
+            <button id="no-btn" class="btn no-btn" onclick="changeMessage()">No</button>
+        </div>
+        
+        <div id="love-section" class="hidden">
+            <h2 class="text-success fs-6 fs-md-5">Yay! <span class="name-highlight">{{name}}</span>, you said Yes! 🎉</h2>
+            <p class="fs-6 fs-md-4">My love for you, <span class="name-highlight">{{name}}</span>, is like a never-ending story, written in the stars and sealed with every heartbeat. 💖</p>
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3EzZXM5MWFoY3JmNnI2dWx4bzBkNDVpMGc2NW9rc2l4dW5xdnk3MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l4pTdcifPZLpDjL1e/giphy.gif" alt="Romantic Love GIF" width="300">
+        </div>
+        
+        <div id="sad-section" class="hidden">
+            <h2 class="text-danger fs-6 fs-md-5">Oh no! <span class="name-highlight">{{name}}</span>, you broke my heart! 💔</h2>
+            <img src="https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif" alt="Crying GIF" width="300">
+        </div>
+        
+        <div id="final-section" class="hidden">
+            <h2 class="text-warning fs-6 fs-md-5">Just kidding, <span class="name-highlight">{{name}}</span>! 😆</h2>
+            <h3 class="text-primary fs-6 fs-md-5">I will always love you no matter what! 💖</h3>
+            <button class="btn yes-btn" onclick="acceptFinalYes()">Yes</button>
+        </div>
+    </div>
+    
+    <script>
+        const name = "Janani";
+        document.body.innerHTML = document.body.innerHTML.replace(/{{name}}/g, name);
+
+        // Photo URLs with proper src paths
+        const photoUrls = [
+            "images/p1.jpeg",
+            "images/p2.jpeg",
+            "images/p4.jpeg",
+            "images/p3.jpeg",
+            "images/p5.jpeg",
+            "images/p6.jpeg"
+        ];
+        
+        const photoContainer = document.getElementById('photoContainer');
+        const modal = document.getElementById('imageModal');
+        const enlargedImg = document.getElementById('enlargedImage');
+        
+        // Create photo elements
+        photoUrls.forEach((url, index) => {
+            const photoDiv = document.createElement('div');
+            photoDiv.className = `photo ${index % 2 === 0 ? 'left' : 'right'}`;
+            
+            // Adjust position based on screen size
+            const isMobile = window.innerWidth < 768;
+            const verticalSpacing = isMobile ? 30 : 33;
+            photoDiv.style.top = `${(Math.floor(index/2) * verticalSpacing)}%`;
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Memory ${index + 1}`;
+            
+            // Add click event to enlarge image
+            photoDiv.onclick = function() {
+                enlargedImg.src = url;
+                modal.style.display = "flex";
+                modal.style.alignItems = "center";
+                modal.style.justifyContent = "center";
+            };
+            
+            photoDiv.appendChild(img);
+            photoContainer.appendChild(photoDiv);
+        });
+        
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = "none";
+        }
+        
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // Animation function
+        let currentPhotoIndex = 0;
+        const photos = document.querySelectorAll('.photo');
+        
+        function animateNextPhoto() {
+            if (currentPhotoIndex < photos.length) {
+                photos[currentPhotoIndex].classList.add('active');
+                currentPhotoIndex++;
+                const delay = window.innerWidth < 768 ? 600 : 800; // Faster animation on mobile
+                setTimeout(animateNextPhoto, delay);
+            }
+        }
+        
+        // Start photo animation when page loads
+        window.onload = function() {
+            setTimeout(animateNextPhoto, 500);
+            
+            // Add resize event listener to adjust layout on screen size change
+            window.addEventListener('resize', function() {
+                const isMobile = window.innerWidth < 768;
+                const verticalSpacing = isMobile ? 30 : 33;
+                
+                photos.forEach((photo, index) => {
+                    photo.style.top = `${(Math.floor(index/2) * verticalSpacing)}%`;
+                });
+            });
+        };
+        
+        // Proposal functions
+        let messages = [
+    `Are you really sure, <span class='name-highlight'>${name}</span>? 💔`,
+    `Think about how amazing we could be together, <span class='name-highlight'>${name}</span>! 🥰`,
+    `I promise to make you smile every day, <span class='name-highlight'>${name}</span>! 😊`,
+    `My heart beats only for you, <span class='name-highlight'>${name}</span>! 💘`,
+    `I’ll wait for you, no matter what, <span class='name-highlight'>${name}</span>. ⏳💖`,
+    `You and I are meant to be, <span class='name-highlight'>${name}</span>. Don't break my heart! 💞`,
+    `Every heartbeat of mine whispers your name, <span class='name-highlight'>${name}</span>. 💓`,
+    `Without you, my world feels incomplete, <span class='name-highlight'>${name}</span>. 🌎💔`,
+    `Love is knocking, <span class='name-highlight'>${name}</span>! Will you open your heart? 🚪💖`,
+    `Give me a chance to prove how much I love you, <span class='name-highlight'>${name}</span>! 💕`,
+    `Together, we can create our own fairytale, <span class='name-highlight'>${name}</span>. ✨`,
+    `Even the stars are waiting for your 'Yes', <span class='name-highlight'>${name}</span>! 🌟`,
+    `You are the melody to my heart’s song, <span class='name-highlight'>${name}</span>. 🎶💖`,
+    `Please don’t say no, <span class='name-highlight'>${name}</span>! My heart belongs to you! ❤️`,
+    `If love is a journey, I want to walk it with you, <span class='name-highlight'>${name}</span>. 🚶‍♂️🚶‍♀️`,
+    `Cupid has already shot his arrow, <span class='name-highlight'>${name}</span>. Don't dodge it! 🏹💘`,
+    `If I could wish for anything, it would be you, <span class='name-highlight'>${name}</span>. ✨`,
+    `Life is short, let's make it beautiful together, <span class='name-highlight'>${name}</span>. 💑`,
+    `You light up my world like nobody else, <span class='name-highlight'>${name}</span>. 💡💖`,
+    `Let’s build a love story that will last forever, <span class='name-highlight'>${name}</span>. 📖💞`
+];
+
+// let messages = [
+//     `Nee nambariya <span class='name-highlight'>${name}</span>? 💔`,
+//     `Namaku epdi oru azhagana life irukkum nu yosichu paaru, <span class='name-highlight'>${name}</span>! 🥰`,
+//     `Daily unakku sirippu thara naan iruppen, <span class='name-highlight'>${name}</span>! 😊`,
+//     `En ullam un peyar thaan solrathu, <span class='name-highlight'>${name}</span>! 💘`,
+//     `Nee varanum nu naan kaathiruppen, <span class='name-highlight'>${name}</span>. ⏳💖`,
+//     `Naam rendu perum serndha thaan perfect, <span class='name-highlight'>${name}</span>. En manasa udaikaadha! 💞`,
+//     `En heartbeat kooda un peyar thaan paadara maari, <span class='name-highlight'>${name}</span>. 💓`,
+//     `Nee illama en ulagamye incomplete ah irukku, <span class='name-highlight'>${name}</span>. 🌎💔`,
+//     `Kadhal kadikiradhu, <span class='name-highlight'>${name}</span>! Un manasa thirakkariyaa? 🚪💖`,
+//     `En kathaliya prove panna oru chance kudu, <span class='name-highlight'>${name}</span>! 💕`,
+//     `Naam rendu perum oru fairytale create panna mudiyum, <span class='name-highlight'>${name}</span>. ✨`,
+//     `Vaanathula irukka stars kooda un "Yes" kaathitu irukku, <span class='name-highlight'>${name}</span>! 🌟`,
+//     `Nee thaan en manasa paadara paatu, <span class='name-highlight'>${name}</span>. 🎶💖`,
+//     `Please illanu sollaadha, <span class='name-highlight'>${name}</span>! En manasu unnudaiyathu! ❤️`,
+//     `Kadhal oru journey na, naan un kooda nadaikka ready, <span class='name-highlight'>${name}</span>. 🚶‍♂️🚶‍♀️`,
+//     `Cupid already arrow vachu irukkan, <span class='name-highlight'>${name}</span>. Adha thavikkaadha! 🏹💘`,
+//     `En wish ellam nee thaan, <span class='name-highlight'>${name}</span>. ✨`,
+//     `Vaazhkai short dhaan, atha alagaga nadathalaam, <span class='name-highlight'>${name}</span>. 💑`,
+//     `Nee thaan en ulagattha light pannra maari, <span class='name-highlight'>${name}</span>. 💡💖`,
+//     `Namaku oru kadhal kadhai ezhudhalaam, <span class='name-highlight'>${name}</span>. Forever ah irukkattum! 📖💞`
+// ];
+
+
+        let messageIndex = 0;
+
+        function startProposal() {
+            document.getElementById('intro-section').classList.add('hidden');
+            document.getElementById('proposal-section').classList.remove('hidden');
+        }
+
+        function showLove() {
+            document.getElementById('proposal-section').classList.add('hidden');
+            document.getElementById('final-section').classList.add('hidden');
+            document.getElementById('love-section').classList.remove('hidden');
+        }
+
+        function acceptFinalYes() {
+            document.getElementById('final-section').classList.add('hidden');
+            document.getElementById('love-section').classList.remove('hidden');
+        }
+
+        function changeMessage() {
+            if (messageIndex >= messages.length - 1) {
+                document.getElementById('proposal-section').classList.add('hidden');
+                document.getElementById('sad-section').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('sad-section').classList.add('hidden');
+                    document.getElementById('final-section').classList.remove('hidden');
+                }, 3000);
+                return;
+            }
+            document.getElementById('valentine-message').innerHTML = messages[messageIndex];
+            messageIndex++;
+        }    
+    </script>
+</body>
+</html>
