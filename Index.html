@@ -3,44 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floating Mystery Box</title>
+    <title>Love Janani 💖</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap');
+        
         body {
-            background-color: #121212;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
+            font-family: 'Courier New', sans-serif;
+            background-color: #FFC0CB;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Background with parallax effect */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ffcdd2, #f8bbd0, #e1bee7, #d1c4e9);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .name-highlight {
+            font-family: 'Dancing Script', cursive;
+            color: #e91e63;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #e91e63; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #e91e63; }
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 8px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .yes-btn {
+            background-color: #32CD32;
+            color: white;
+        }
+        
+        .no-btn {
+            background-color: #FF0000;
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Hearts container */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100vh;
+            pointer-events: none;
+            z-index: 1;
             overflow: hidden;
         }
-        .mystery-box {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(45deg, #ffcc00, #ff6600);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
-            position: relative;
-            animation: float 3s ease-in-out infinite;
+        
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
         }
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
+        
+        .falling-heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+        
+        .falling-heart:hover {
+            transform: scale(1.5);
+        }
+        
+        .yes-btn:hover, .yes-btn:active {
+            box-shadow: 0px 0px 15px 5px yellow;
+        }
+        
+        .no-btn:hover, .no-btn:active {
+            background-color: red;
+            color: white;   
+        }
+        
+        /* Photo animation styles */
+        .photo-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .photo {
+            position: absolute;
+            width: 130px;
+            height: 100px;
+            background-color: #fff;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.8s, transform 0.8s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo:hover img {
+            transform: scale(1.1);
+        }
+        
+        .photo .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px;
+            font-size: 0.7rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo:hover .caption {
+            transform: translateY(0);
+        }
+        
+        .photo.left {
+            left: 2%;
+        }
+        
+        .photo.right {
+            right: 2%;
+        }
+        
+        .photo.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Modal styles for enlarged images */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            animation: zoom 0.6s;
+        }
+        
+        @keyframes zoom {
+            from {transform: scale(0.1)}
+            to {transform: scale(1)}
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        /* Responsive design for different screen sizes */
+        @media (min-width: 576px) {
+            .container {
+                margin-top: 30px;
+                padding: 20px;
+                width: 90%;
             }
-            50% {
-                transform: translateY(-20px);
+            
+            .photo {
+                width: 160px;
+                height: 120px;
             }
+            
+            .photo.left {
+                left: 5%;
+            }
+            
+            .photo.right {
+                right: 5%;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                width: 70%;
+                max-width: 600px;
+                padding: 25px;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 25px;
+                font-size: 18px;
+            }
+            
+            .photo {
+                width: 200px;
+                height: 150px;
+            }
+            
+            .photo.left {
+                left: 10%;
+            }
+            
+            .photo.right {
+                right: 10%;
+            }
+            
+            .photo-container {
+                height: 400px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                width: 60%;
+            }
+            
+            .photo {
+                width: 220px;
+                height: 160px;
+            }
+        }
+
+        /* Added styles for proposal images */
+        #proposal-image-container {
+            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .proposal-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .proposal-image.active {
+            opacity: 1;
         }
     </style>
 </head>
-<body>
-    <div class="mystery-box d-flex justify-content-center align-items-center">
-        <h4 class="text-white">?</h4>
+<body class="d-flex flex-column justify-content-center align-items-center">
+    <!-- Parallax background -->
+    <div class="parallax-bg"></div>
+    
+    <!-- Container for falling hearts -->
+    <div id="heartsContainer" class="hearts-container"></div>
+
+    <!-- Modal for enlarged images -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="enlargedImage">
     </div>
+
+    <div id="proposal-container" class="container p-3 p-md-4 border rounded shadow">
+        <div id="intro-section">
+            <h1 class="text-danger fs-5 fs-md-4 animate__animated animate__bounceIn">💕 To the Most Beautiful <span class="name-highlight">{{name}}</span> 💕</h1>
+            
+            <div class="photo-container" id="photoContainer">
+                <!-- Photos will be added here by JavaScript -->
+            </div>
+            <p class="fs-6 fs-md-5 animate__animated animate__fadeIn">
+                I'm truly sorry for all the trouble I've caused, <span class="name-highlight">{{name}}</span>. 
+                I promise to fill our lives with love, understanding, and care moving forward.
+            </p>            
+            <button class="btn btn-success animate__animated animate__pulse animate__infinite" onclick="startProposal()">Click Here for a Surprise! 🎁</button>
+        </div>
+        
+        <div id="proposal-section" class="hidden">
+            <h1 id="valentine-message" class="text-primary fs-5 fs-md-4"><span class="name-highlight">{{name}}</span>, Will you be my Valentine? ❤️</h1>
+            
+            <!-- Added image container for proposal images -->
+            <div id="proposal-image-container">
+                <!-- Proposal images will be added here by JavaScript -->
+            </div>
+            
+            <div class="mt-3">
+                <button class="btn yes-btn" onclick="showLove()">Yes</button>
+                <button id="no-btn" class="btn no-btn" onclick="changeMessage()">No</button>
+            </div>
+        </div>
+        
+        <div id="love-section" class="hidden">
+            <h2 class="text-success fs-6 fs-md-5">Yay! <span class="name-highlight">{{name}}</span>, you said Yes! 🎉</h2>
+            <p class="fs-6 fs-md-4">My love for you, <span class="name-highlight">{{name}}</span>, is like a never-ending story, written in the stars and sealed with every heartbeat. 💖</p>
+            <div class="image-container">
+                <img src="/api/placeholder/400/300" alt="Romantic Love" class="img-fluid rounded">
+            </div>
+        </div>
+        
+        <div id="sad-section" class="hidden">
+            <h2 class="text-danger fs-6 fs-md-5">Oh no! <span class="name-highlight">{{name}}</span>, you broke my heart! 💔</h2>
+            <div class="image-container">
+                <img src="/api/placeholder/400/300" alt="Broken Heart" class="img-fluid rounded">
+            </div>
+        </div>
+        
+        <div id="final-section" class="hidden">
+            <h2 class="text-warning fs-6 fs-md-5">Just kidding, <span class="name-highlight">{{name}}</span>! 😆</h2>
+            <h3 class="text-primary fs-6 fs-md-5">I will always love you no matter what! 💖</h3>
+            <div class="image-container">
+                <img src="/api/placeholder/400/300" alt="Always Love You" class="img-fluid rounded"> 
+            </div>
+            <button class="btn yes-btn mt-3" onclick="acceptFinalYes()">Yes</button>
+        </div>
+    </div>
+    
     <script>
-        document.querySelector('.mystery-box').addEventListener('click', function() {
-            alert("You discovered the mystery!");
+        // Set the name
+        const name = "Janani";
+        document.body.innerHTML = document.body.innerHTML.replace(/{{name}}/g, name);
+
+        // Photo URLs with proper src paths
+        // In a real-world scenario, these would be paths to your actual images
+        const photoUrls = [
+            "/api/placeholder/200/150?text=Memory+1",
+            "/api/placeholder/200/150?text=Memory+2",
+            "/api/placeholder/200/150?text=Memory+3",
+            "/api/placeholder/200/150?text=Memory+4",
+            "/api/placeholder/200/150?text=Memory+5",
+            "/api/placeholder/200/150?text=Memory+6"
+        ];
+        
+        // List of proposal images that will change when clicking "No"
+        const proposalImages = [
+            "/api/placeholder/400/300?text=Please+Say+Yes",
+            "/api/placeholder/400/300?text=I+Love+You",
+            "/api/placeholder/400/300?text=We+Are+Perfect",
+            "/api/placeholder/400/300?text=My+Heart+Is+Yours",
+            "/api/placeholder/400/300?text=Forever+Together",
+            "/api/placeholder/400/300?text=Say+Yes+Please"
+        ];
+        
+        const photoContainer = document.getElementById('photoContainer');
+        const proposalImageContainer = document.getElementById('proposal-image-container');
+        const modal = document.getElementById('imageModal');
+        const enlargedImg = document.getElementById('enlargedImage');
+        
+        // Create photo elements for the intro section
+        photoUrls.forEach((url, index) => {
+            const photoDiv = document.createElement('div');
+            photoDiv.className = `photo ${index % 2 === 0 ? 'left' : 'right'}`;
+            
+            // Adjust position based on screen size
+            const isMobile = window.innerWidth < 768;
+            const verticalSpacing = isMobile ? 30 : 33;
+            photoDiv.style.top = `${(Math.floor(index/2) * verticalSpacing)}%`;
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Memory ${index + 1}`;
+            
+            // Add click event to enlarge image
+            photoDiv.onclick = function() {
+                enlargedImg.src = url;
+                modal.style.display = "flex";
+                modal.style.alignItems = "center";
+                modal.style.justifyContent = "center";
+            };
+            
+            photoDiv.appendChild(img);
+            photoContainer.appendChild(photoDiv);
         });
+        
+        // Create proposal images
+        proposalImages.forEach((url, index) => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Proposal Image ${index + 1}`;
+            img.className = 'proposal-image';
+            
+            // Make first image active
+            if (index === 0) {
+                img.classList.add('active');
+            }
+            
+            proposalImageContainer.appendChild(img);
+        });
+        
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = "none";
+        }
+        
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // Create falling hearts
+        function createFallingHeart() {
+            const heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.classList.add("falling-heart");
+            
+            // Add hearts to the dedicated container
+            const heartsContainer = document.getElementById("heartsContainer");
+            heartsContainer.appendChild(heart);
+            
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        
+        // Reduce heart frequency for mobile devices
+        const heartInterval = window.innerWidth < 768 ? 500 : 300;
+        setInterval(createFallingHeart, heartInterval);
+        
+        // Animation function for intro photos
+        let currentPhotoIndex = 0;
+        const photos = document.querySelectorAll('.photo');
+        
+        function animateNextPhoto() {
+            if (currentPhotoIndex < photos.length) {
+                photos[currentPhotoIndex].classList.add('active');
+                currentPhotoIndex++;
+                const delay = window.innerWidth < 768 ? 600 : 800; // Faster animation on mobile
+                setTimeout(animateNextPhoto, delay);
+            }
+        }
+        
+        // Proposal functions
+        let messages = [
+            `Are you really sure, <span class='name-highlight'>${name}</span>? 💔`,
+            `Think about how amazing we could be together, <span class='name-highlight'>${name}</span>! 🥰`,
+            `I promise to make you smile every day, <span class='name-highlight'>${name}</span>! 😊`,
+            `My heart beats only for you, <span class='name-highlight'>${name}</span>! 💘`,
+            `I'll wait for you, no matter what, <span class='name-highlight'>${name}</span>. ⏳💖`,
+            `You and I are meant to be, <span class='name-highlight'>${name}</span>. Don't break my heart! 💞`,
+            `Every heartbeat of mine whispers your name, <span class='name-highlight'>${name}</span>. 💓`,
+            `Without you, my world feels incomplete, <span class='name-highlight'>${name}</span>. 🌎💔`,
+            `Love is knocking, <span class='name-highlight'>${name}</span>! Will you open your heart? 🚪💖`,
+            `Give me a chance to prove how much I love you, <span class='name-highlight'>${name}</span>! 💕`,
+            `Together, we can create our own fairytale, <span class='name-highlight'>${name}</span>. ✨`,
+            `Even the stars are waiting for your 'Yes', <span class='name-highlight'>${name}</span>! 🌟`,
+            `You are the melody to my heart's song, <span class='name-highlight'>${name}</span>. 🎶💖`,
+            `Please don't say no, <span class='name-highlight'>${name}</span>! My heart belongs to you! ❤️`,
+            `If love is a journey, I want to walk it with you, <span class='name-highlight'>${name}</span>. 🚶‍♂️🚶‍♀️`,
+            `Cupid has already shot his arrow, <span class='name-highlight'>${name}</span>. Don't dodge it! 🏹💘`,
+            `If I could wish for anything, it would be you, <span class='name-highlight'>${name}</span>. ✨`,
+            `Life is short, let's make it beautiful together, <span class='name-highlight'>${name}</span>. 💑`,
+            `You light up my world like nobody else, <span class='name-highlight'>${name}</span>. 💡💖`,
+            `Let's build a love story that will last forever, <span class='name-highlight'>${name}</span>. 📖💞`
+        ];
+
+        let messageIndex = 0;
+        let imageIndex = 0;
+
+        function startProposal() {
+            document.getElementById('intro-section').classList.add('hidden');
+            document.getElementById('proposal-section').classList.remove('hidden');
+        }
+
+        function showLove() {
+            document.getElementById('proposal-section').classList.add('hidden');
+            document.getElementById('final-section').classList.add('hidden');
+            document.getElementById('love-section').classList.remove('hidden');
+        }
+
+        function acceptFinalYes() {
+            document.getElementById('final-section').classList.add('hidden');
+            document.getElementById('love-section').classList.remove('hidden');
+        }
+
+        function changeMessage() {
+            if (messageIndex >= messages.length - 1) {
+                document.getElementById('proposal-section').classList.add('hidden');
+                document.getElementById('sad-section').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('sad-section').classList.add('hidden');
+                    document.getElementById('final-section').classList.remove('hidden');
+                }, 3000);
+                return;
+            }
+            
+            // Update the message
+            document.getElementById('valentine-message').innerHTML = messages[messageIndex];
+            messageIndex++;
+            
+            // Change the proposal image
+            const proposalImages = document.querySelectorAll('.proposal-image');
+            proposalImages.forEach(img => img.classList.remove('active'));
+            
+            imageIndex = (imageIndex + 1) % proposalImages.length;
+            proposalImages[imageIndex].classList.add('active');
+        }
+        
+        // Start photo animation when page loads
+        window.onload = function() {
+            setTimeout(animateNextPhoto, 500);
+            
+            // Add resize event listener to adjust layout on screen size change
+            window.addEventListener('resize', function() {
+                const isMobile = window.innerWidth < 768;
+                const verticalSpacing = isMobile ? 30 : 33;
+                
+                photos.forEach((photo, index) => {
+                    photo.style.top = `${(Math.floor(index/2) * verticalSpacing)}%`;
+                });
+            });
+        };
     </script>
 </body>
 </html>
